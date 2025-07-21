@@ -5,23 +5,23 @@ import ThemeToggleButton from "../../../shared/components/generic/ThemeToggleBut
 import { useTheme } from "../../../shared/hooks/useTheme";
 import Header from "../../../shared/components/generic/header";
 import { useDateTime } from "../../../shared/hooks/useDataTime";
+import Robot from "../../../../core/assets/icons/notifications/robot.png";
+import "../pages/Notifications.css"; // Asegúrate de tener este CSS
 
 const mockNotifications: Notification[] = [
-    
   {
     id: 1,
     type: "info",
     title: "Agua mala",
-    description: "The campaign parameters were successfully updated.",
+    description: "El agua contiene impurezas. Revisa el sistema.",
     date: "2025-07-15T13:30:00",
     expanded: false,
   },
   {
     id: 2,
     type: "error",
-    title: "Sensor mmalo",
-    description:
-      "Are you sure you would like to remove this user? This action cannot be undone.",
+    title: "Sensor malo",
+    description: "Sensor desactivado o sin respuesta.",
     date: "2025-07-15T13:35:00",
     expanded: false,
   },
@@ -29,7 +29,7 @@ const mockNotifications: Notification[] = [
     id: 3,
     type: "success",
     title: "Temperatura alta",
-    description: "All changes have been saved successfully.",
+    description: "Agua lista para reutilizarse.",
     date: "2025-07-15T13:40:00",
     expanded: false,
   },
@@ -38,7 +38,7 @@ const mockNotifications: Notification[] = [
 const NotificationsPage: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
   const { theme, toggleTheme } = useTheme();
-   const { date, time } = useDateTime();
+  const { date, time } = useDateTime();
 
   const toggleExpand = (id: number) => {
     setNotifications((prev) =>
@@ -56,39 +56,33 @@ const NotificationsPage: React.FC = () => {
 
   return (
     <>
-       <Header
-          title="Notificaciones"
-          subtitle="Visualiza y gestiona tus notificaciones de forma eficiente"
-          
-          date={date}
-          time={time}
-        />
-        
-      <div className="w-full max-w-2xl mx-auto px-6 py-8 space-y-6 mt-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Notifis</h2>
-          <button
-            onClick={clearAll}
-            className="text-sm text-gray-600 underline hover:text-black dark:text-sky-300"
-          >
-            Clear all
-          </button>
+      <Header
+        title="Notificaciones"
+        subtitle="Visualiza y gestiona tus notificaciones de forma eficiente"
+        date={date}
+        time={time}
+      />
+
+      <div className="notification-container">
+        <div className="notification-card">
+          <div className="notification-header">
+            <h2>Notificaciones</h2>
+            <button onClick={clearAll}>Limpiar</button>
+          </div>
+
+          <NotificationList
+            notifications={notifications}
+            onToggle={toggleExpand}
+            onRemove={removeNotification}
+          />
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-4">
-          <button className="bg-sky-100 text-sky-800 dark:bg-sky-800 dark:text-white text-sm px-4 py-1 rounded-full">
-            Notificaciones <span className="ml-1">{notifications.length}</span>
-          </button>
+        <div className="robot-container">
+          <img src={Robot} alt="Robot" />
         </div>
-
-        <NotificationList
-          notifications={notifications}
-          onToggle={toggleExpand}
-          onRemove={removeNotification}
-        />
       </div>
 
-      <div>
+      <div style={{ marginTop: "2rem" }}>
         <ThemeToggleButton theme={theme} toggleTheme={toggleTheme} />
       </div>
     </>
